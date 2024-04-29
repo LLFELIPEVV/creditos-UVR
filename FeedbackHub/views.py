@@ -14,30 +14,43 @@ def create_user(data):
     except IntegrityError:
         raise IntegrityError('Ya existe un usuario con este nombre y correo electrónico')
 
-def create_mensaje(request):
+def create_mensaje(mensaje):
     try:
-        if request.method == 'POST':
-            data = request.POST
-            
-            # Crear o obtener el usuario
-            nuevo_usuario, creado = create_user(data)
-            
-            # Obtener o crear el tipo de mensaje
-            tipo_mensaje = TipoMensaje.objects.get(tipo=data.get('tipo'))
-            
-            # Crear el mensaje
-            nuevo_mensaje = Mensaje.objects.create(
-                usuario=nuevo_usuario,
-                tipo=tipo_mensaje,
-                asunto=data.get('asunto'),
-                contenido=data.get('contenido')
-            )
-            
-            return JsonResponse({'message': 'Mensaje creado correctamente'}, status=201)
+        data = mensaje
+        
+        # Crear o obtener el usuario
+        nuevo_usuario, creado = create_user(data)
+        
+        # Obtener o crear el tipo de mensaje
+        tipo_mensaje, _ = TipoMensaje.objects.get(tipo=data.get('tipo'))
+        
+        # Crear el mensaje
+        nuevo_mensaje = Mensaje.objects.create(
+            usuario=nuevo_usuario,
+            tipo=tipo_mensaje,
+            asunto=data.get('asunto'),
+            contenido=data.get('contenido')
+        )
+        
+        return True  # Indica que el mensaje se creó correctamente
             
     except IntegrityError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+        return False  # Indica que hubo un error al crear el mensaje
     
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return False  # Indica que hubo un error al crear el mensaje
 
+def FeedbackHub(request):
+    if request.method == 'GET':
+
+        return render(request, 'template_de_Quejas.html')
+    elif request.method == 'POST':
+        mensaje = request.POST
+        if create_mensaje(mensaje):
+            mensaje_aviso = 'El mensaje se creó correctamente.'
+        else:
+            mensaje_aviso = 'Hubo un error al crear el mensaje.'
+            
+        return render(request, 'template_de_Quejas.html', {'mensaje_aviso': mensaje_aviso})
+        
+        
