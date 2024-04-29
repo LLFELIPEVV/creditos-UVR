@@ -1,0 +1,37 @@
+Instrucciones para configurar el frontend de UVRinfo:
+
+1.  El frontend debe estar ubicado en la carpeta "UVRinfo".
+
+2.  Dentro de la carpeta "UVRinfo", encontrarás una carpeta llamada "templates". Esta carpeta es donde deben 
+    ir todos los archivos HTML.
+
+3.  En la carpeta "templates", es común dividir los archivos en subcarpetas para una mejor organización. Por 
+    ejemplo, puedes tener una carpeta para los componentes, otra para la página de inicio (que contendrá el
+    archivo index), otra para el simulador, etc. Sin embargo, como el proyecto no es extenso, puede omitir 
+    esta subdivisión y colocar todos los archivos HTML directamente dentro de la carpeta "templates".
+
+4.  Además, encontrarás una carpeta llamada "static". Dentro de esta carpeta, hay tres subcarpetas donde deben 
+    ir los archivos estáticos correspondientes:
+    - Las imágenes deben ir dentro de la carpeta "images".
+    - Los archivos JavaScript deben ir dentro de la carpeta "js".
+    - Los archivos CSS deben ir dentro de la carpeta "styles".
+
+
+Instrucciones para nombrar los commits en git:
+
+<tipo>: Descripción concisa del cambio (archivo modificado)
+
+Tipos:
+
+1.  feat: Nuevas características o funcionalidades.
+2.  fix: Correcciones de errores.
+3.  refactor: Cambios en la estructura o legibilidad del código sin agregar nuevas funcionalidades ni corregir 
+    errores.
+4.  style: Cambios en el formato o estilo del código.
+
+Ejemplos:
+
+-feat:       Agregar formulario de contacto (index.html)
+-fix:        Corregir error de carga de imágenes (gallery.js)
+-refactor:   Reorganizar funciones de validación (form-validation.js)
+-style:      Actualizar estilos de la barra de navegación (styles.css)
