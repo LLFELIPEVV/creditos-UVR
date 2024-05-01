@@ -1,7 +1,6 @@
 from .models import Usuario, Mensaje, TipoMensaje
 from django.shortcuts import render
 from django.db import IntegrityError
-from django.http import JsonResponse
 
 # Create your views here.
 def create_user(data):
@@ -11,8 +10,8 @@ def create_user(data):
         
         nuevo_usuario, creado = Usuario.objects.get_or_create(nombre=nuevo_nombre, correo_electronico=nuevo_email)
         return nuevo_usuario, creado
-    except IntegrityError:
-        raise IntegrityError('Ya existe un usuario con este nombre y correo electrónico')
+    except Exception as e:
+        return False
 
 def create_mensaje(mensaje):
     try:
@@ -21,8 +20,8 @@ def create_mensaje(mensaje):
         # Crear o obtener el usuario
         nuevo_usuario, creado = create_user(data)
         
-        # Obtener o crear el tipo de mensaje
-        tipo_mensaje, _ = TipoMensaje.objects.get(tipo=data.get('tipo'))
+        # Obtener el tipo de mensaje
+        tipo_mensaje = TipoMensaje.objects.get(tipo=data.get('tipo'))
         
         # Crear el mensaje
         nuevo_mensaje = Mensaje.objects.create(
@@ -33,9 +32,6 @@ def create_mensaje(mensaje):
         )
         
         return True  # Indica que el mensaje se creó correctamente
-            
-    except IntegrityError as e:
-        return False  # Indica que hubo un error al crear el mensaje
     
     except Exception as e:
         return False  # Indica que hubo un error al crear el mensaje

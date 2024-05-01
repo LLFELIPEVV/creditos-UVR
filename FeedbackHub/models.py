@@ -6,7 +6,7 @@ class TipoMensaje(models.Model):
 
 class Usuario(models.Model):
     nombre = models.CharField(max_length=150)
-    correo_electronico = models.EmailField()
+    correo_electronico = models.EmailField(unique=True)
     
     class Meta:
         unique_together = [['nombre', 'correo_electronico']]
