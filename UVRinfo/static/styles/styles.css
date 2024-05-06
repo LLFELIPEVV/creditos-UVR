@@ -1,0 +1,167 @@
+*::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+*::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background-color: #DFE9EB;
+}
+  
+*::-webkit-scrollbar-track:hover {
+    background-color: #B8C0C2;
+}
+  
+*::-webkit-scrollbar-track:active {
+    background-color: #B8C0C2;
+}
+  
+*::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background-color: #215375;
+}
+  
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #3670A3;
+}
+  
+*::-webkit-scrollbar-thumb:active {
+    background-color: #69A9C9;
+}
+
+h1, h2, h3, h4 {
+    text-wrap: balance;
+    text-align: center;
+}
+
+p {
+    text-wrap: pretty;
+    word-wrap: break-word;
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #e2e2e2;
+    font-size: 18px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 2;
+}
+
+div, body, footer {
+    box-sizing: border-box;
+}
+
+header.header {
+    color: white;
+    display: flex;
+    background-color: rgb(76, 143, 206);
+    height: 50px;
+    width: 100%;
+    align-items: center;
+}
+
+.main-navbar {
+    width: 50%;
+}
+
+.main-navbar ul {
+    display: flex;
+    padding: 0;
+    justify-content: space-evenly;
+}
+
+.main-navbar li {
+    list-style: none;
+    margin: 4px;
+}
+
+.main-navbar a {
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    padding: 6px 9px;
+}
+
+div.main-wrapper {
+    width: 100%;
+    max-width: 1224px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+aside, main {
+    padding: 10px 20px;
+    flex-basis: 0;
+}
+
+aside.section-secondary {
+    top: 10px;
+    position: sticky;
+    text-align: center;
+    background-color: white;
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 100dvh;
+    overflow-x: hidden;
+}
+
+aside.section-secondary p {
+    text-align: justify;
+}
+
+aside.section-secondary ul {
+    padding: 0 8%;
+}
+
+aside.section-secondary li {
+    list-style: decimal;
+}
+
+main {
+    background-color: white;
+    flex-grow: 2;
+}
+
+main img {
+    display: block;
+    max-width: 60%;
+    margin: auto;
+}
+
+footer {
+    color: white;
+    padding: 5px;
+    background-color: black;
+    width: 100%;
+    margin-top: auto;
+    text-align: center;
+}
+
+table.simulacion-casas {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.simulacion-casas th, .simulacion-casas td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+.simulacion-casas th {
+    background-color: rgb(76, 143, 206);
+}
+
+main article p {
+    margin: 10px 20px;
+}
