@@ -1,75 +1,88 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'styles/form.css' %}">
-    <title>Simulador de creditos UVR</title>
-</head>
-<body>
-    <header class="header">
-        {% include 'components/main-navbar.html' %}
-    </header>
-    <div class="main-wrapper">
-        {% include 'components/section-secondary.html' %}
-        <main>
-            <article class="article-simulador">
-                <h1>Simulador de Creditos UVR</h1>
-                
-                <div class="container">
-                    <form class="form-simulador" method="POST">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit">Calcular</button>
-                    </form>
-                </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static 'styles/styles.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/form.css' %}" />
+        <title>Simulador de creditos UVR</title>
+    </head>
+    <body>
+        <header class="header">
+            {% include 'components/main-navbar.html' %}
+        </header>
+        <div class="main-wrapper">
+            {% include 'components/section-secondary.html' %}
+            <main>
+                <article class="article-simulador">
+                    <h1>Simulador de Creditos UVR</h1>
 
-                {% if cuota_mes %}
-                <p>
-                    Esta simulación se basa en una inflación mensual constante del 1%. Sin embargo, es importante tener en cuenta que en la realidad, los valores pueden variar considerablemente en un préstamo real. Esta herramienta está diseñada para proporcionar una estimación de los pagos que podrían enfrentar al utilizar un préstamo con créditos UVR.
-                </p>
+                    <div class="container">
+                        <form class="form-simulador" method="POST">
+                            {% csrf_token %} {{ form.as_p }}
+                            <button type="submit">Calcular</button>
+                        </form>
+                    </div>
 
-                <h3 class="resultado">Su cuota del mes {{ numero_mes }} es: ${{ cuota_mes }}</h3>
+                    {% if cuota_mes %}
+                    <p>
+                        Esta simulación se basa en una inflación mensual
+                        constante del 1%. Sin embargo, es importante tener en
+                        cuenta que en la realidad, los valores pueden variar
+                        considerablemente en un préstamo real. Esta herramienta
+                        está diseñada para proporcionar una estimación de los
+                        pagos que podrían enfrentar al utilizar un préstamo con
+                        créditos UVR.
+                    </p>
 
-                <h2>Tabla de Pagos Mensuales</h2>
+                    <h3 class="resultado">
+                        Su cuota del mes {{ numero_mes }} es: ${{ cuota_mes }}
+                    </h3>
 
-                <table class="simulacion-casas cuotas">
-                    <th class="title-table" colspan="6">Simulacion de prestamo mes a mes</th>
-                    <tr>
-                        <th>Mes</th>
-                        <th>Cuota</th>
-                        <th>Intereses</th>
-                        <th>Inflacion</th>
-                        <th>Abono</th>
-                        <th>Saldo</th>
-                    </tr>
-                    {% for elem in pagos_data %}
-                    <tr class="cuotas-row">
-                        {% if elem.Mes == numero_mes %}
-                        <td class="fila-cuota tabla-mes">{{ elem.Mes }}</td>
-                        <td class="fila-cuota">{{ elem.Cuota }}</td>
-                        <td class="fila-cuota">{{ elem.Intereses }}</td>
-                        <td class="fila-cuota">{{ elem.Inflacion }}</td>
-                        <td class="fila-cuota">{{ elem.Abono }}</td>
-                        <td class="fila-cuota">{{ elem.Saldo }}</td>
-                        {% else %}
-                        <td class="tabla-mes">{{ elem.Mes }}</td>
-                        <td>{{ elem.Cuota }}</td>
-                        <td>{{ elem.Intereses }}</td>
-                        <td>{{ elem.Inflacion }}</td>
-                        <td>{{ elem.Abono }}</td>
-                        <td>{{ elem.Saldo }}</td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </table>
-                {% endif %}
+                    <h2>Tabla de Pagos Mensuales</h2>
 
-            </article>
-        </main>
-    </div>
-    {% include 'components/footer.html' %}
-</body>
+                    <table class="simulacion-casas cuotas">
+                        <th class="title-table" colspan="6">
+                            Simulacion de prestamo mes a mes
+                        </th>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Cuota</th>
+                            <th>Intereses</th>
+                            <th>Inflacion</th>
+                            <th>Abono</th>
+                            <th>Saldo</th>
+                        </tr>
+                        {% for elem in pagos_data %}
+                        <tr class="cuotas-row">
+                            {% if elem.Mes == numero_mes %}
+                            <td class="fila-cuota tabla-mes">{{ elem.Mes }}</td>
+                            <td class="fila-cuota">{{ elem.Cuota }}</td>
+                            <td class="fila-cuota">{{ elem.Intereses }}</td>
+                            <td class="fila-cuota">{{ elem.Inflacion }}</td>
+                            <td class="fila-cuota">{{ elem.Abono }}</td>
+                            <td class="fila-cuota">{{ elem.Saldo }}</td>
+                            {% else %}
+                            <td class="tabla-mes">{{ elem.Mes }}</td>
+                            <td>{{ elem.Cuota }}</td>
+                            <td>{{ elem.Intereses }}</td>
+                            <td>{{ elem.Inflacion }}</td>
+                            <td>{{ elem.Abono }}</td>
+                            <td>{{ elem.Saldo }}</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+
+                    <h3 class="alert">
+                        Debido a múltiples redondeos, es posible que el saldo
+                        final se aproxime a 0, pero no sea exactamente 0
+                    </h3>
+                </article>
+            </main>
+        </div>
+        {% include 'components/footer.html' %}
+    </body>
 </html>
