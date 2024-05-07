@@ -1,57 +1,80 @@
 from django.shortcuts import render
+from .forms import SimuladorForm
 
 # Create your views here.
 # Calcula el valor de la cuota mensual del crédito UVR.
-def calcular_cuota(monto_credito, tasa_uvr, plazo_credito, periodicidad_pagos):
+def calcular_cuota(monto_credito, tasa_anual, plazo_credito, mes_pago):
+    # Lista para almacenar los detalles de cada mes
+    pagos_data = []
+    # Interes mensual
+    r = (tasa_anual / 12) / 100
+    print(f'r: {r}')
+    # Monto total del credito
+    pv = monto_credito
+    print(f'pv: {pv}')
+    # Numero total de pagos
+    n = plazo_credito
+    print(f'n: {n}')
+    # Tasa de inflacion mensual
+    i = 0.01
+    # Numero de la cuota
+    m = mes_pago
+    print(f'm: {m}')
     
-    # Calcula el factor de capitalización, que representa el efecto de la tasa de interés sobre el monto del crédito
-    """Se refiere a los intereses mensuales
-        tasa_uvr == 0.012 que seria el 1,2% por eso se le suma el 1 que ya cuenta como el 100%
-        y quedaria como 101,2%"""
-    factor_capitalizacion = (1 + tasa_uvr) ** periodicidad_pagos
-    # Calcula el factor de amortización, que representa el efecto de la tasa de interés sobre el plazo del crédito
-    """Da el procentaje del total de la cuota que se descuenta del total del credito"""
-    factor_amortizacion = 1 - (1 + tasa_uvr) ** (-plazo_credito * periodicidad_pagos)
-    # Calcula la cuota mensual del crédito UVR utilizando los factores de capitalización y amortización
-    cuota = monto_credito * factor_capitalizacion * tasa_uvr / factor_amortizacion
+    saldo = pv
     
-    return cuota
+    for x in range(1, n+1):
+        cuota_mensual = round(((r * pv) / (1 - (1 + r) ** -n)) * (1 + i) ** (x - 1), 4)
+        # La cantidad de intereses que se pagan en la cuota
+        intereses = round(saldo * r, 4)
+        # La cantidad de inflacion que se paga en la cuota
+        inflacion = round((cuota_mensual * ((i) * (x - 1))), 4)
+        print(f'inflacion: {inflacion}')
+        # La cantidad de dinero real que se va a pagar el saldo del prestamo
+        abono = round(cuota_mensual - (intereses + inflacion), 4)
+        
+        if x == m:
+            cuota_mes = cuota_mensual
+        
+        pagos_data.append({
+            'Mes': x,
+            'Cuota': cuota_mensual,
+            'Intereses': intereses,
+            'Inflacion': inflacion,
+            'Abono': abono,
+            'Saldo': saldo
+        })
+        
+        saldo = round(saldo - abono, 4)
+    
+    print(f'Cuota: {cuota_mes}')
+    
+    return cuota_mes, pagos_data
 
 def simulador(request):
     if request.method == 'POST':
-        # Monto del crédito en pesos colombianos.
-        monto_credito = float(request.POST.get('monto_credito'))
-        # Tasa de interés UVR mensual.
-        tasa_uvr = float(request.POST.get('tasa_uvr'))
-        # Plazo del crédito en meses.
-        plazo_credito = int(request.POST.get('plazo_credito'))
-        # Periodicidad de los pagos (mensual).
-        periodicidad_pagos = int(request.POST.get('periodicidad_pagos'))
+        form = SimuladorForm(request.POST)
+        if form.is_valid():
+            # Monto del crédito en pesos colombianos.
+            monto_credito = float(request.POST.get('monto_credito'))
+            # Tasa de interés UVR mensual.
+            tasa_anual = float(request.POST.get('tasa_anual'))
+            # Plazo del crédito en meses.
+            plazo_credito = int(request.POST.get('plazo_credito'))
+            # Periodicidad de los pagos (mensual).
+            mes_pago = int(request.POST.get('mes_pago'))
 
-        cuota_mensual = calcular_cuota(monto_credito, tasa_uvr, plazo_credito, periodicidad_pagos)
+            cuota_mes, pagos_data = calcular_cuota(monto_credito, tasa_anual, plazo_credito, mes_pago)
 
-        pago_actual = 0
-        saldo_actual = monto_credito
-        interes_pagado = 0
-        pagos_data = []
+            context = {
+                'form': form,
+                'cuota_mes': cuota_mes,
+                'numero_mes': mes_pago,
+                'pagos_data': pagos_data,
+            }
+            
+            return render(request, 'simulador.html', context)
+    else:
+        form = SimuladorForm()
+    return render(request, 'simulador.html', {'form': form})
 
-        for mes in range(1, plazo_credito + 1):
-            pago_actual += cuota_mensual
-            interes_pagado_mes = saldo_actual * tasa_uvr
-            saldo_actual = saldo_actual - cuota_mensual + interes_pagado_mes
-            interes_pagado += interes_pagado_mes
-
-            pagos_data.append({
-                "Mes": mes,
-                "Pago": round(cuota_mensual, 2),
-                "Saldo": round(saldo_actual, 2),
-                "Interes_pagado": round(interes_pagado_mes, 2)
-            })
-
-        context = {
-            'cuota_mensual': cuota_mensual,
-            'pagos_data': pagos_data,
-        }
-        return render(request, 'tu_app/tu_plantilla.html', context)
-
-    return render(request, 'tu_app/tu_plantilla.html')
