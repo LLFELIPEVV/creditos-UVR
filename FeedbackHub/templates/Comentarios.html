@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static 'styles/styles.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/form.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/informe.css' %}" />
+        <title>Comentarios</title>
+    </head>
+    <body>
+        <header class="header">
+            {% include 'components/main-navbar.html' %}
+        </header>
+        <div class="main-wrapper">
+            {% include 'components/section-secondary.html' %}
+            <main>
+                <article>
+                    <h1>Quejas, Reclamos y Sugerencias</h1>
+                    <form method="POST" class="form-simulador">
+                        {% csrf_token %} {{ form.as_p }}
+                        <button type="submit">Enviar</button>
+                    </form>
+
+                    {% if mensaje_aviso == True %}
+                    <div class="alerta correcto mostrar">
+                        El mensaje se ha creado correctamente
+                    </div>
+                    {% elif mensaje_aviso == False %}
+                    <div class="alerta incorrecto mostrar">
+                        Hubo un error al crear el mensaje
+                    </div>
+                    {% endif %}
+                </article>
+            </main>
+        </div>
+    </body>
+    <script>
+        // Selecciona todas las alertas
+        var alertas = document.querySelectorAll(".alerta");
+
+        // Agrega la clase "mostrar" a cada alerta
+        alertas.forEach(function (alerta) {
+            alerta.classList.add("mostrar");
+        });
+    </script>
+</html>

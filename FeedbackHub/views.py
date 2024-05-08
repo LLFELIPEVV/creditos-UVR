@@ -1,6 +1,8 @@
 from .models import Usuario, Mensaje, TipoMensaje
 from django.shortcuts import render
-from django.db import IntegrityError
+from .forms import MensajeForm
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 def create_user(data):
@@ -20,6 +22,10 @@ def create_mensaje(mensaje):
         # Crear o obtener el usuario
         nuevo_usuario, creado = create_user(data)
         
+        print(f"tipo: {data.get('tipo')}")
+        print(f"asunto: {data.get('asunto')}")
+        print(f"contenido: {data.get('contenido')}")
+        
         # Obtener el tipo de mensaje
         tipo_mensaje = TipoMensaje.objects.get(tipo=data.get('tipo'))
         
@@ -37,16 +43,18 @@ def create_mensaje(mensaje):
         return False  # Indica que hubo un error al crear el mensaje
 
 def FeedbackHub(request):
-    if request.method == 'GET':
-
-        return render(request, 'template_de_Quejas.html')
-    elif request.method == 'POST':
-        mensaje = request.POST
-        if create_mensaje(mensaje):
-            mensaje_aviso = 'El mensaje se creó correctamente.'
-        else:
-            mensaje_aviso = 'Hubo un error al crear el mensaje.'
-            
-        return render(request, 'template_de_Quejas.html', {'mensaje_aviso': mensaje_aviso})
+    form = MensajeForm()
+    mensaje_aviso = None
+    
+    if request.method == 'POST':
+        form = MensajeForm(request.POST)
+        if form.is_valid():
+            mensaje = request.POST
+            if create_mensaje(mensaje):
+                mensaje_aviso = True
+            else:
+                mensaje_aviso = False
+    
+    return render(request, 'Comentarios.html', {'form': form, 'mensaje_aviso': mensaje_aviso})
         
         

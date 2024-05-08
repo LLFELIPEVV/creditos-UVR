@@ -3,6 +3,13 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
+def cargar_tipos_mensaje(apps, schema_editor):
+    TipoMensaje = apps.get_model('FeedbackHub', 'TipoMensaje')
+    TipoMensaje.objects.bulk_create([
+        TipoMensaje(tipo='Queja'),
+        TipoMensaje(tipo='Sugerencia'),
+        TipoMensaje(tipo='Reclamo')
+    ])
 
 class Migration(migrations.Migration):
 
@@ -42,4 +49,5 @@ class Migration(migrations.Migration):
                 ('usuario', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='FeedbackHub.usuario')),
             ],
         ),
+        migrations.RunPython(cargar_tipos_mensaje),
     ]
