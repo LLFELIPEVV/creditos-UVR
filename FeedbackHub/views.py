@@ -1,8 +1,6 @@
 from .models import Usuario, Mensaje, TipoMensaje
 from django.shortcuts import render
 from .forms import MensajeForm
-from django.core.mail import send_mail
-from django.conf import settings
 
 # Create your views here.
 def create_user(data):
@@ -10,9 +8,18 @@ def create_user(data):
         nuevo_nombre = data.get('nombre')
         nuevo_email = data.get('email')
         
-        nuevo_usuario, creado = Usuario.objects.get_or_create(nombre=nuevo_nombre, correo_electronico=nuevo_email)
-        return nuevo_usuario, creado
+        # Verificar si ya existe un usuario con el mismo correo electrónico
+        usuario_existente = Usuario.objects.filter(correo_electronico=nuevo_email).first()
+        if usuario_existente:
+            # Si el usuario ya existe, simplemente lo devuelve
+            return usuario_existente, False
+        
+        # Si no existe, se crea uno nuevo
+        nuevo_usuario = Usuario.objects.create(nombre=nuevo_nombre, correo_electronico=nuevo_email)
+        return nuevo_usuario, True
+    
     except Exception as e:
+        print(e)
         return False
 
 def create_mensaje(mensaje):
@@ -40,6 +47,7 @@ def create_mensaje(mensaje):
         return True  # Indica que el mensaje se creó correctamente
     
     except Exception as e:
+        print(e)
         return False  # Indica que hubo un error al crear el mensaje
 
 def FeedbackHub(request):

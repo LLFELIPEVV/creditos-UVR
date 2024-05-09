@@ -2,3 +2,4 @@
 *__pycache__*
 db.sqlite3
 informe_mensajes.*
+secret_key.txt

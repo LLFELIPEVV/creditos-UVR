@@ -8,18 +8,18 @@ def calcular_cuota(monto_credito, tasa_anual, plazo_credito, mes_pago):
     pagos_data = []
     # Interes mensual
     r = (tasa_anual / 12) / 100
-    print(f'r: {r}')
+    #print(f'r: {r}')
     # Monto total del credito
     pv = monto_credito
-    print(f'pv: {pv}')
+    #print(f'pv: {pv}')
     # Numero total de pagos
     n = plazo_credito
-    print(f'n: {n}')
+    #print(f'n: {n}')
     # Tasa de inflacion mensual
     i = 0.01
     # Numero de la cuota
     m = mes_pago
-    print(f'm: {m}')
+    #print(f'm: {m}')
     
     saldo = pv
     
@@ -38,7 +38,7 @@ def calcular_cuota(monto_credito, tasa_anual, plazo_credito, mes_pago):
         intereses = round(saldo * r, 3)
         # La cantidad de inflacion que se paga en la cuota
         inflacion = round(cuota_mensual - (cuota_mensual / ((i + 1) ** (x - 1))), 3)
-        print(f'inflacion: {inflacion}')
+        #print(f'inflacion: {inflacion}')
         # La cantidad de dinero real que se va a pagar el saldo del prestamo
         abono = round(cuota_mensual - (intereses + inflacion), 3)
         
@@ -56,7 +56,7 @@ def calcular_cuota(monto_credito, tasa_anual, plazo_credito, mes_pago):
             'Saldo': saldo
         })
     
-    print(f'Cuota: {cuota_mes}')
+    #print(f'Cuota: {cuota_mes}')
     
     return cuota_mes, pagos_data
 
